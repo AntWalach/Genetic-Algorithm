@@ -1,0 +1,4 @@
+Best fitness: 2.0548199831202423
+Worst fitness: 7.799789851433077
+Average fitness: 5.051293493669382
+Best run: run_02
