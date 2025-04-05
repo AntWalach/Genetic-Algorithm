@@ -1,3 +1,4 @@
+import os
 import tkinter as tk
 from tkinter import ttk, messagebox
 import time
@@ -176,9 +177,7 @@ class GeneticApp:
         self.batch_runs = tk.IntVar(value=10)
         ttk.Entry(parent, textvariable=self.batch_runs, width=6).grid(row=row, column=1, **entry_style)
         row += 1
-        ttk.Button(parent, text="🔁 Uruchom wielokrotnie + eksport", command=self.run_batch).grid(row=row, column=0,
-                                                                                                 columnspan=2,
-                                                                                                 pady=(5, 10))
+        ttk.Button(parent, text="Uruchom wielokrotnie + eksport", command=self.run_batch).grid(row=row, column=0, columnspan=2, pady=(5, 10))
 
     def run_batch(self):
         selected = self.test_function.get()

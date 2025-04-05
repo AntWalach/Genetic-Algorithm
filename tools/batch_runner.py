@@ -13,7 +13,14 @@ def generate_run_folder_name(config, test_function):
     param_string = f"{test_function}_{config['selection_method']}_{config['crossover_method']}_{config['mutation_method']}_{config['num_variables']}vars_{config['num_epochs']}epochs"
     short_hash = hashlib.md5(param_string.encode()).hexdigest()[:6]
     folder_name = f"{test_function}_{config['num_variables']}vars_{config['num_epochs']}epochs_{short_hash}_{timestamp}"
-    return os.path.join("batch_results", folder_name)
+
+    # >>>>>>> DODANE: katalog projektu, niezależnie od CWD
+    script_dir = os.path.dirname(os.path.abspath(__file__))  # ścieżka do batch_runner.py
+    project_root = os.path.abspath(os.path.join(script_dir, ".."))  # katalog główny projektu
+    base_dir = os.path.join(project_root, "batch_results")
+    os.makedirs(base_dir, exist_ok=True)
+
+    return os.path.join(base_dir, folder_name)
 
 def save_summary_table(latest_folder, result_data):
     function_name = result_data["test_function"]
