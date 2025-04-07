@@ -1,12 +1,12 @@
 import random
 import numpy as np
 
-def select_parents(population, fitnesses, method, tournament_size):
+def select_parents(population, fitnesses, method, tournament_size, minimize):
     # Metoda selekcji: wybiera 2 rodziców na podstawie wybranej strategii
 
     if method == "best":
         # Wybór 2 najlepszych osobników z całej populacji
-        parents = sorted(zip(population, fitnesses), key=lambda x: x[1], reverse=True)
+        parents = sorted(zip(population, fitnesses), key=lambda x: x[1], reverse=not minimize)
         return [x[0] for x in parents[:2]]
 
     elif method == "roulette":
@@ -23,5 +23,9 @@ def select_parents(population, fitnesses, method, tournament_size):
         def tournament():
             # Losuj `tournament_size` osobników, wybierz najlepszego z nich
             competitors = random.sample(list(zip(population, fitnesses)), tournament_size)
-            return max(competitors, key=lambda x: x[1])[0]
+            # Zwróć najlepszego osobnika, uwzględniając minimalizację lub maksymalizację
+            if minimize:
+                return min(competitors, key=lambda x: x[1])[0]  # dla minimalizacji
+            else:
+                return max(competitors, key=lambda x: x[1])[0]  # dla maksymalizacji
         return [tournament(), tournament()]  # dwukrotnie wybieramy rodzica

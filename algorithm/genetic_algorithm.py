@@ -80,7 +80,7 @@ class GeneticAlgorithm:
 
             # Tworzenie reszty populacji
             while len(new_population) < self.population_size:
-                p1, p2 = select_parents(population, fitnesses, self.selection_method, self.tournament_size)
+                p1, p2 = select_parents(population, fitnesses, self.selection_method, self.tournament_size, self.minimize)
                 c1, c2 = crossover(p1, p2, self.crossover_method, self.crossover_prob)
                 c1 = mutate(c1, self.mutation_method, self.mutation_prob, self.num_variables)
                 c2 = mutate(c2, self.mutation_method, self.mutation_prob, self.num_variables)

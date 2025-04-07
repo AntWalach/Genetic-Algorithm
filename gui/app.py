@@ -121,7 +121,7 @@ class GeneticApp:
 
         def fitness_fn(x):
             value = base_fn(x)
-            return value if minimize else -value
+            return value
 
         config = {
             "minimize": minimize,
@@ -203,7 +203,7 @@ class GeneticApp:
 
         def fitness_fn(x):
             value = base_fn(x)
-            return value if minimize else -value
+            return value
 
         config = {
             "minimize": minimize,
