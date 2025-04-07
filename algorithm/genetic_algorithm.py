@@ -82,8 +82,8 @@ class GeneticAlgorithm:
             while len(new_population) < self.population_size:
                 p1, p2 = select_parents(population, fitnesses, self.selection_method, self.tournament_size)
                 c1, c2 = crossover(p1, p2, self.crossover_method, self.crossover_prob)
-                c1 = mutate(c1, self.mutation_method, self.mutation_prob)
-                c2 = mutate(c2, self.mutation_method, self.mutation_prob)
+                c1 = mutate(c1, self.mutation_method, self.mutation_prob, self.num_variables)
+                c2 = mutate(c2, self.mutation_method, self.mutation_prob, self.num_variables)
                 c1 = apply_inversion(c1, self.inversion_prob)
                 c2 = apply_inversion(c2, self.inversion_prob)
                 new_population.extend([c1, c2])
