@@ -1,4 +1,8 @@
 import random
+import numpy as np
+
+from algorithm.utils_real import clip_to_bounds
+
 
 def mutate(chromosome, method, prob, num_variables=None):
     # Mutacja chromosomu: w zależności od metody losowo zmienia bity z prawdopodobieństwem `prob`
@@ -34,3 +38,16 @@ def mutate(chromosome, method, prob, num_variables=None):
             chromo[start:end] = [value] * bits_per_var
 
     return ''.join(chromo)
+
+
+def uniform_mutation(vec, prob, low, high):
+    child = vec.copy()
+    mask = np.random.rand(len(vec)) < prob
+    child[mask] = np.random.uniform(low, high, size=np.sum(mask))
+    return child
+
+def gaussian_mutation(vec, prob, sigma, low, high):
+    child = vec.copy()
+    mask = np.random.rand(len(vec)) < prob
+    child[mask] += np.random.normal(0, sigma, size=np.sum(mask))
+    return clip_to_bounds(child, low, high)

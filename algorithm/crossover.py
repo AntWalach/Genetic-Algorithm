@@ -1,5 +1,5 @@
 import random
-
+import numpy as np
 def crossover(p1, p2, method, prob):
     # Zwraca dwójkę potomków po krzyżowaniu p1 i p2 według wybranej metody
     # Z szansą `prob` wykonuje krzyżowanie, w przeciwnym razie zwraca oryginalne rodzicielskie chromosomy
@@ -34,3 +34,30 @@ def crossover(p1, p2, method, prob):
             ''.join(random.choice([p1[i], p2[i]]) for i in range(len(p1))),
             ''.join(random.choice([p1[i], p2[i]]) for i in range(len(p2)))
         )
+
+def arithmetic_crossover(p1, p2, alpha=0.5):
+    return alpha * p1 + (1 - alpha) * p2, (1 - alpha) * p1 + alpha * p2
+
+def linear_crossover(p1, p2):
+    c1 = 0.5 * p1 + 0.5 * p2
+    c2 = 1.5 * p1 - 0.5 * p2
+    c3 = -0.5 * p1 + 1.5 * p2
+    return c1, c2, c3                           # zwrócimy 2 najlepsze w real_ga
+
+def blx_alpha(p1, p2, alpha=0.3):
+    low  = np.minimum(p1, p2)
+    high = np.maximum(p1, p2)
+    diff = high - low
+    return np.random.uniform(low - alpha*diff, high + alpha*diff)
+
+def blx_alpha_beta(p1, p2, alpha=0.5, beta=0.5):
+    child = np.empty_like(p1)
+    for i, (x, y) in enumerate(zip(p1, p2)):
+        d = abs(x - y)
+        low  = min(x, y) - alpha * d
+        high = max(x, y) + beta  * d
+        child[i] = np.random.uniform(low, high)
+    return child
+
+def averaging_crossover(p1, p2):
+    return (p1 + p2) / 2.0

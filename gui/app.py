@@ -6,6 +6,8 @@ import numpy as np
 from algorithm.genetic_algorithm import GeneticAlgorithm
 from benchmark_functions import Hypersphere, Rana, Michalewicz
 from opfunu.cec_based.cec2014 import F12014, F282014
+
+from algorithm.real_ga import RealGeneticAlgorithm
 from gui.charts import draw_charts
 from gui.storage import save_results_csv, save_results_db
 from tools.batch_runner import run_multiple_times
@@ -34,6 +36,16 @@ class GeneticApp:
 
         row = 0
         self._add_combobox(main_frame, "Funkcja testowa:", row, 'test_function', ["hypersphere", "rana", "hybrid", "composition_6", "michalewicz"], label_style, callback=self._on_function_change); row += 1
+        self._add_combobox(
+            main_frame,
+            "Reprezentacja chromosomu:",  # etykieta
+            row,
+            "chromosome_type",
+            ["binary", "real"],  # dostępne opcje
+            label_style,
+            callback=self._on_representation_change
+        )
+        row += 1
         self._add_label_entry(main_frame, "Dolna granica zmiennych:", row, 'lower_bound', -5.12, label_style, entry_style); row += 1
         self._add_label_entry(main_frame, "Górna granica zmiennych:", row, 'upper_bound', 5.12, label_style, entry_style); row += 1
         self._add_label_entry(main_frame, "Dokładność (np. 0.01):", row, 'precision', 0.01, label_style, entry_style); row += 1
@@ -67,14 +79,29 @@ class GeneticApp:
         setattr(self, var_name, var)
         ttk.Entry(parent, textvariable=var).grid(row=row, column=1, **entry_style)
 
-    def _add_combobox(self, parent, label, row, var_name, values, label_style, callback=None):
+    # def _add_combobox(self, parent, label, row, var_name, values, label_style, callback=None):
+    #     ttk.Label(parent, text=label).grid(row=row, column=0, **label_style)
+    #     var = tk.StringVar(value=values[0])
+    #     setattr(self, var_name, var)
+    #     combobox = ttk.Combobox(parent, textvariable=var, values=values, state="readonly")
+    #     combobox.grid(row=row, column=1, padx=5, pady=3)
+    #     if callback:
+    #         combobox.bind("<<ComboboxSelected>>", lambda e: callback())
+    def _add_combobox(self, parent, label, row, var_name, values,
+                      label_style, callback=None):
         ttk.Label(parent, text=label).grid(row=row, column=0, **label_style)
+
         var = tk.StringVar(value=values[0])
-        setattr(self, var_name, var)
-        combobox = ttk.Combobox(parent, textvariable=var, values=values, state="readonly")
-        combobox.grid(row=row, column=1, padx=5, pady=3)
+        setattr(self, var_name, var)  # ➊ przechowujemy StringVar
+
+        combo = ttk.Combobox(parent, textvariable=var,
+                             values=values, state="readonly")
+        combo.grid(row=row, column=1, padx=5, pady=3)
+
+        setattr(self, f"{var_name}_combo", combo)  # ➋ przechowujemy widget
+
         if callback:
-            combobox.bind("<<ComboboxSelected>>", lambda e: callback())
+            combo.bind("<<ComboboxSelected>>", lambda e: callback())
 
     def _on_function_change(self):
         selected = self.test_function.get()
@@ -140,23 +167,40 @@ class GeneticApp:
             "num_variables": self.num_variables.get(),
             "function": selected
         }
-
-        ga = GeneticAlgorithm(
-            func=fitness_fn,
-            minimize=minimize,
-            precision=config["precision"],
-            population_size=config["population_size"],
-            num_epochs=config["num_epochs"],
-            selection_method=config["selection_method"],
-            crossover_method=config["crossover_method"],
-            crossover_prob=config["crossover_prob"],
-            mutation_method=config["mutation_method"],
-            mutation_prob=config["mutation_prob"],
-            inversion_prob=config["inversion_prob"],
-            elitism_rate=config["elitism_rate"],
-            lower_bound=config["lower_bound"],
-            upper_bound=config["upper_bound"]
-        )
+        if self.chromosome_type.get() == "real":
+            ga = RealGeneticAlgorithm(
+                func=fitness_fn,
+                minimize=minimize,
+                population_size=config["population_size"],
+                num_epochs=config["num_epochs"],
+                selection_method=config["selection_method"],
+                crossover_method=config["crossover_method"],
+                crossover_prob=config["crossover_prob"],
+                mutation_method=config["mutation_method"],
+                mutation_prob=config["mutation_prob"],
+                sigma=0.1,
+                elitism_rate=config["elitism_rate"],
+                lower_bound=config["lower_bound"],
+                upper_bound=config["upper_bound"],
+                num_variables=config["num_variables"]
+            )
+        else:
+            ga = GeneticAlgorithm(
+                func=fitness_fn,
+                minimize=minimize,
+                precision=config["precision"],
+                population_size=config["population_size"],
+                num_epochs=config["num_epochs"],
+                selection_method=config["selection_method"],
+                crossover_method=config["crossover_method"],
+                crossover_prob=config["crossover_prob"],
+                mutation_method=config["mutation_method"],
+                mutation_prob=config["mutation_prob"],
+                inversion_prob=config["inversion_prob"],
+                elitism_rate=config["elitism_rate"],
+                lower_bound=config["lower_bound"],
+                upper_bound=config["upper_bound"]
+            )
 
         ga.num_variables = config["num_variables"]
 
@@ -226,3 +270,27 @@ class GeneticApp:
         output_path = run_multiple_times(GeneticAlgorithm, config, fitness_fn, selected, num_runs=runs)
         messagebox.showinfo("Gotowe", f"Zakończono {runs} uruchomień.\nWyniki zapisane w folderze:\n{output_path}")
 
+    def _set_combobox_values(self, var_name, values):
+        combo = getattr(self, f"{var_name}_combo")  # bezpośredni uchwyt ➋
+        combo["values"] = values
+
+        var = getattr(self, var_name)  # StringVar ➊
+        if var.get() not in values:
+            var.set(values[0])
+
+    def _on_representation_change(self):
+        if self.chromosome_type.get() == "real":
+            self._set_combobox_values("crossover_method",
+                ["arithmetic", "linear", "blx_alpha", "blx_alpha_beta", "averaging"])
+            self._set_combobox_values("mutation_method",
+                ["uniform", "gaussian"])
+            # domyślne:
+            self.crossover_method.set("arithmetic")
+            self.mutation_method.set("gaussian")
+        else:  # binary
+            self._set_combobox_values("crossover_method",
+                ["one_point", "two_point", "uniform", "granular"])
+            self._set_combobox_values("mutation_method",
+                ["one_point", "two_point", "boundary"])
+            self.crossover_method.set("one_point")
+            self.mutation_method.set("one_point")
