@@ -1,0 +1,16 @@
+{
+  "label": "hyper_bin_tourn_2pt_bitflip",
+  "gene_type": "int",
+  "num_genes": 200,
+  "init_range": [
+    0,
+    2
+  ],
+  "selection": "tournament",
+  "crossover": "two_point_crossover",
+  "mutation": "mutation_bitflip",
+  "runs": 20,
+  "best_result": -0.0006092703519249969,
+  "mean_result": -0.00020848728845059903,
+  "std_deviation": 0.00014055772237568212
+}

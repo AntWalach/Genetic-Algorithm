@@ -267,7 +267,9 @@ class GeneticApp:
         }
 
         runs = self.batch_runs.get()
-        output_path = run_multiple_times(GeneticAlgorithm, config, fitness_fn, selected, num_runs=runs)
+        #output_path = run_multiple_times(GeneticAlgorithm, config, fitness_fn, selected, num_runs=runs)
+        GA_CLASS = RealGeneticAlgorithm if self.chromosome_type.get() == "real" else GeneticAlgorithm
+        output_path = run_multiple_times(GA_CLASS, config, fitness_fn, selected, num_runs=runs)
         messagebox.showinfo("Gotowe", f"Zakończono {runs} uruchomień.\nWyniki zapisane w folderze:\n{output_path}")
 
     def _set_combobox_values(self, var_name, values):

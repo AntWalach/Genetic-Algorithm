@@ -10,13 +10,13 @@ def select_parents(population, fitnesses, method, tournament_size, minimize):
         return [x[0] for x in parents[:2]]
 
     elif method == "roulette":
-        # Selekcja ruletkowa - losowanie z prawdopodobieństwem proporcjonalnym do fitnessu
         total_fitness = sum(fitnesses)
+
         if total_fitness == 0:
-            # Jeśli wszyscy mają 0, losuj dowolnych 2
             return random.sample(population, 2)
-        probs = [f / total_fitness for f in fitnesses]  # prawdopodobieństwa selekcji
-        return list(np.random.choice(population, size=2, replace=False, p=probs))
+        probs = [f / total_fitness for f in fitnesses]
+        indices = np.random.choice(len(population), size=2, replace=False, p=probs)
+        return [population[i] for i in indices]
 
     elif method == "tournament":
         # Selekcja turniejowa - wybierz najlepszych z losowej podgrupy
@@ -29,3 +29,4 @@ def select_parents(population, fitnesses, method, tournament_size, minimize):
             else:
                 return max(competitors, key=lambda x: x[1])[0]  # dla maksymalizacji
         return [tournament(), tournament()]  # dwukrotnie wybieramy rodzica
+    return None

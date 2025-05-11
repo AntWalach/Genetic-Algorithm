@@ -1,0 +1,16 @@
+{
+  "label": "hyper_bin_rws_1pt_bitflip",
+  "gene_type": "int",
+  "num_genes": 200,
+  "init_range": [
+    0,
+    2
+  ],
+  "selection": "rws",
+  "crossover": "one_point_crossover",
+  "mutation": "mutation_bitflip",
+  "runs": 20,
+  "best_result": -36.68785911038706,
+  "mean_result": -28.145954731218932,
+  "std_deviation": 5.31523533100379
+}

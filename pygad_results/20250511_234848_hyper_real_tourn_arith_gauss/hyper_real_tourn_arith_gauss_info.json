@@ -1,0 +1,16 @@
+{
+  "label": "hyper_real_tourn_arith_gauss",
+  "gene_type": "float",
+  "num_genes": 10,
+  "init_range": [
+    -5.12,
+    5.12
+  ],
+  "selection": "tournament",
+  "crossover": "arithmetic_crossover",
+  "mutation": "mutation_gauss",
+  "runs": 20,
+  "best_result": -0.12219436491270923,
+  "mean_result": -0.006579269903811126,
+  "std_deviation": 0.026526620440546492
+}

@@ -1,26 +1,27 @@
 import numpy as np
-from benchmark_functions import Hyperellipsoid
-from opfunu.cec_based import cec2014
 from algorithm.ga_operators import decode_individual
+from benchmark_functions import Hypersphere
+from opfunu.cec_based import cec2014
 
-# --- funkcje benchmark ---------------------------------------------
-hfun  = Hyperellipsoid(n_dimensions=10)
-f3fun = cec2014.F32014(ndim=10)
+hypersphere_fun = Hypersphere(n_dimensions=10)
+composition6_fun = cec2014.F282014(ndim=10)
 
-# --- BINARNA -------------------------------------------------------
-def fitness_hyper_bin(ga, solution, idx):
+# funkcje przystosowania (binarna reprezentacja)
+def fitness_hypersphere_bin(ga, solution, idx):
     real = decode_individual(solution, bits_per_var=20, n_vars=10,
-                             low=-32.768, high=32.768)
-    return -hfun(real)
+                             low=-5.12, high=5.12)
+    return -hypersphere_fun(real)
 
-def fitness_f3_bin(solution, _):
+def fitness_composition6_bin(ga, solution, idx):
     real = decode_individual(solution, bits_per_var=20, n_vars=10,
-                             low=f3fun.bounds[0][0], high=f3fun.bounds[0][1])
-    return -f3fun.evaluate(real)
+                             low=composition6_fun.bounds[0][0],
+                             high=composition6_fun.bounds[0][1])
+    return -composition6_fun.evaluate(real)
 
-# --- RZECZYWISTA ---------------------------------------------------
-def fitness_hyper_real(solution, _):
-    return -hfun(solution)
 
-def fitness_f3_real(solution, _):
-    return -f3fun.evaluate(solution)
+# reprezentacja rzeczywista
+def fitness_hypersphere_real(ga, solution, idx):
+    return -hypersphere_fun(solution)
+
+def fitness_composition6_real(ga, solution, idx):
+    return -composition6_fun.evaluate(solution)

@@ -1,0 +1,16 @@
+{
+  "label": "hyper_bin_rws_2pt_swap",
+  "gene_type": "int",
+  "num_genes": 200,
+  "init_range": [
+    0,
+    2
+  ],
+  "selection": "rws",
+  "crossover": "two_point_crossover",
+  "mutation": "mutation_swap",
+  "runs": 20,
+  "best_result": -39.08256260370057,
+  "mean_result": -30.9219254628672,
+  "std_deviation": 5.44135997539395
+}

@@ -1,0 +1,16 @@
+{
+  "label": "hyper_bin_tourn_1pt_swap",
+  "gene_type": "int",
+  "num_genes": 200,
+  "init_range": [
+    0,
+    2
+  ],
+  "selection": "tournament",
+  "crossover": "one_point_crossover",
+  "mutation": "mutation_swap",
+  "runs": 20,
+  "best_result": -0.0038896875661577806,
+  "mean_result": -0.0011061738990275822,
+  "std_deviation": 0.0011255568594408208
+}

@@ -34,6 +34,8 @@ def crossover(p1, p2, method, prob):
             ''.join(random.choice([p1[i], p2[i]]) for i in range(len(p1))),
             ''.join(random.choice([p1[i], p2[i]]) for i in range(len(p2)))
         )
+    return None
+
 
 def arithmetic_crossover(p1, p2, alpha=0.5):
     return alpha * p1 + (1 - alpha) * p2, (1 - alpha) * p1 + alpha * p2
