@@ -2,3 +2,4 @@
 __pycache__/
 *.pyc
 batch_results/
+.idea/
