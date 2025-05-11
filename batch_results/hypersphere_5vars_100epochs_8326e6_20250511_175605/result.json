@@ -1,0 +1,27 @@
+{
+  "config": {
+    "minimize": true,
+    "precision": 0.01,
+    "population_size": 50,
+    "num_epochs": 100,
+    "selection_method": "best",
+    "crossover_method": "arithmetic",
+    "crossover_prob": 0.8,
+    "mutation_method": "gaussian",
+    "mutation_prob": 0.05,
+    "inversion_prob": 0.1,
+    "elitism_rate": 10.0,
+    "lower_bound": -5.12,
+    "upper_bound": 5.12,
+    "num_variables": 5
+  },
+  "test_function": "hypersphere",
+  "num_runs": 10,
+  "average_fitness": 1.0903885044156396e-05,
+  "best_fitness": 8.721772731196016e-07,
+  "worst_fitness": 6.88191187849335e-05,
+  "best_run": 2,
+  "results": [
+    {
+      "run": 1,
+      "solution": 
