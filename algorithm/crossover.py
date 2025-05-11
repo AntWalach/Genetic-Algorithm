@@ -42,15 +42,15 @@ def linear_crossover(p1, p2):
     c1 = 0.5 * p1 + 0.5 * p2
     c2 = 1.5 * p1 - 0.5 * p2
     c3 = -0.5 * p1 + 1.5 * p2
-    return c1, c2, c3                           # zwrócimy 2 najlepsze w real_ga
+    return c1, c2, c3
 
-def blx_alpha(p1, p2, alpha=0.3):
+def blend_crossover_alpha(p1, p2, alpha=0.3):
     low  = np.minimum(p1, p2)
     high = np.maximum(p1, p2)
     diff = high - low
     return np.random.uniform(low - alpha*diff, high + alpha*diff)
 
-def blx_alpha_beta(p1, p2, alpha=0.5, beta=0.5):
+def blend_crossover_alpha_beta(p1, p2, alpha=0.5, beta=0.5):
     child = np.empty_like(p1)
     for i, (x, y) in enumerate(zip(p1, p2)):
         d = abs(x - y)

@@ -267,7 +267,9 @@ class GeneticApp:
         }
 
         runs = self.batch_runs.get()
-        output_path = run_multiple_times(GeneticAlgorithm, config, fitness_fn, selected, num_runs=runs)
+        #output_path = run_multiple_times(GeneticAlgorithm, config, fitness_fn, selected, num_runs=runs)
+        GA_CLASS = RealGeneticAlgorithm if self.chromosome_type.get() == "real" else GeneticAlgorithm
+        output_path = run_multiple_times(GA_CLASS, config, fitness_fn, selected, num_runs=runs)
         messagebox.showinfo("Gotowe", f"Zakończono {runs} uruchomień.\nWyniki zapisane w folderze:\n{output_path}")
 
     def _set_combobox_values(self, var_name, values):
@@ -281,7 +283,7 @@ class GeneticApp:
     def _on_representation_change(self):
         if self.chromosome_type.get() == "real":
             self._set_combobox_values("crossover_method",
-                ["arithmetic", "linear", "blx_alpha", "blx_alpha_beta", "averaging"])
+                ["arithmetic", "linear", "blend_crossover_alpha", "blend_crossover_alpha_beta", "averaging"])
             self._set_combobox_values("mutation_method",
                 ["uniform", "gaussian"])
             # domyślne:
