@@ -1,0 +1,16 @@
+{
+  "label": "hyper_real_tourn_arith_uniform",
+  "gene_type": "float",
+  "num_genes": 10,
+  "init_range": [
+    -5.12,
+    5.12
+  ],
+  "selection": "tournament",
+  "crossover": "arithmetic_crossover",
+  "mutation": "mutation_uniform",
+  "runs": 20,
+  "best_result": 0.273165570572453,
+  "mean_result": 0.17967071550388306,
+  "std_deviation": 0.05359305296291085
+}
