@@ -8,7 +8,6 @@ import os
 from datetime import datetime
 
 
-# ------- konfiguracje testowe --------------------------------------
 EXPERIMENTS = [
     # Reprezentacja binarna – Hypersphere
     # ("hyper_bin_tourn_1pt_swap", fit.fitness_hypersphere_bin, int, 200, 0, 2,
@@ -121,7 +120,6 @@ def run_once(label, fitness_func, gene_type, n_genes, low, high,
         best_all[i] = best
         mean_all[i] = np.mean(ga.best_solutions_fitness)
 
-        # UWAGA: zapisujemy -fitness = f(x)
         print(f"{label} run {i+1}/{runs}: best={-best:.4f}  time={t1-t0:.2f}s")
 
         if best < best_run_fitness:
@@ -129,14 +127,12 @@ def run_once(label, fitness_func, gene_type, n_genes, low, high,
             best_run_ga = ga
             best_run_history = fitness_history
 
-    # --- CSV: zapis -fitness = f(x) ---
     with open(f"{prefix}.csv", "w", newline="") as f:
         w = csv.writer(f)
         w.writerow(["run", "best", "mean"])
         for idx, (b, m) in enumerate(zip(best_all, mean_all), 1):
             w.writerow([idx, -b, -m])
 
-    # --- wykres konwergencji ---
     history = np.array(best_run_ga.best_solutions_fitness)
     avg_history = np.array([m for m, _ in best_run_history])
     std_history = np.array([s for _, s in best_run_history])
@@ -154,7 +150,7 @@ def run_once(label, fitness_func, gene_type, n_genes, low, high,
     plt.savefig(f"{prefix}_convergence.png", dpi=200)
     plt.close()
 
-    # --- JSON: zapis -fitness = f(x) ---
+
     info = {
         "label": label,
         "gene_type": "int" if gene_type == int else "float",
@@ -175,8 +171,6 @@ def run_once(label, fitness_func, gene_type, n_genes, low, high,
 
 
 
-
-# ---------------- main ---------------------------------------------
 if __name__ == "__main__":
     for exp in EXPERIMENTS:
         run_once(*exp)

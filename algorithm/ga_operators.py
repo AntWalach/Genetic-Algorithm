@@ -19,7 +19,6 @@ def decode_individual(bit_arr, bits_per_var=20, n_vars=10, low=-5.12, high=5.12)
         for i in range(n_vars)
     ])
 
-# ---------- KRZYŻOWANIA (binary) ------------------------------------------
 def one_point_crossover(parents, offspring_size, ga_instance):
     offspring = []
     for i in range(offspring_size[0]):
@@ -40,7 +39,6 @@ def two_point_crossover(parents, offspring_size, ga_instance):
         offspring.append(p1)
     return np.array(offspring)
 
-# ---------- MUTACJE (binary) ----------------------------------------------
 def mutation_swap(offspring, ga_instance):
     for chrom in offspring:
         i, j = random.sample(range(chrom.size), 2)
@@ -53,7 +51,7 @@ def mutation_bitflip(offspring, ga_instance):
         chrom[idx] = 1 - chrom[idx]
     return offspring
 
-# ---------- KRZYŻOWANIA (real) --------------------------------------------
+
 def arithmetic_crossover(parents, offspring_size, ga_instance):
     alpha = 0.5
     offspring = np.empty(offspring_size, dtype=float)
@@ -77,7 +75,7 @@ def blend_crossover(parents, offspring_size, ga_instance):
 
 # ---------- MUTACJE (real) ------------------------------------------------
 def mutation_gauss(offspring, ga_instance):
-    sigma = 0.1  # lub np. z ga_instance.user_data.get("sigma", 0.1)
+    sigma = 0.1
     for chrom in offspring:
         idx = np.random.randint(chrom.size)
         chrom[idx] += np.random.normal(0, sigma)
