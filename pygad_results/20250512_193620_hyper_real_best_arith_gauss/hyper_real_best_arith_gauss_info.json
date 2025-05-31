@@ -1,0 +1,16 @@
+{
+  "label": "hyper_real_best_arith_gauss",
+  "gene_type": "float",
+  "num_genes": 10,
+  "init_range": [
+    -5.12,
+    5.12
+  ],
+  "selection": "sss",
+  "crossover": "arithmetic_crossover",
+  "mutation": "mutation_gauss",
+  "runs": 5,
+  "best_result": 0.00029517456637892845,
+  "mean_result": 0.00010625080921451463,
+  "std_deviation": 9.793147316086584e-05
+}

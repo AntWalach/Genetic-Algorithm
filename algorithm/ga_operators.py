@@ -1,7 +1,3 @@
-"""
-Własne operatory do użycia w PyGAD.
-Wersja 'binary' działa na int (0/1); 'real' działa na float.
-"""
 import numpy as np
 import random
 
@@ -73,7 +69,6 @@ def blend_crossover(parents, offspring_size, ga_instance):
         offspring[k] = np.random.uniform(low - alpha * diff, high + alpha * diff)
     return offspring
 
-# ---------- MUTACJE (real) ------------------------------------------------
 def mutation_gauss(offspring, ga_instance):
     sigma = 0.1
     for chrom in offspring:

@@ -1,0 +1,16 @@
+{
+  "label": "comp6_real_random_arith_uniform",
+  "gene_type": "float",
+  "num_genes": 10,
+  "init_range": [
+    -5.12,
+    5.12
+  ],
+  "selection": "random",
+  "crossover": "arithmetic_crossover",
+  "mutation": "mutation_uniform",
+  "runs": 5,
+  "best_result": 3076.2828637569373,
+  "mean_result": 3064.894350102778,
+  "std_deviation": 10.20070926176298
+}

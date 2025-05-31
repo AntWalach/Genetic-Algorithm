@@ -16,29 +16,29 @@ class GeneticAlgorithm:
                  lower_bound=-5,
                  upper_bound=5):
         # Inicjalizacja parametrów algorytmu genetycznego
-        self.func = func  # funkcja celu (fitness)
-        self.minimize = minimize  # True = minimalizacja, False = maksymalizacja
-        self.precision = precision  # dokładność kodowania zmiennych
-        self.population_size = population_size  # liczba osobników
-        self.num_epochs = num_epochs  # liczba epok (generacji)
+        self.func = func
+        self.minimize = minimize
+        self.precision = precision
+        self.population_size = population_size
+        self.num_epochs = num_epochs
 
-        self.selection_method = selection_method  # metoda selekcji
-        self.tournament_size = tournament_size  # rozmiar turnieju
+        self.selection_method = selection_method
+        self.tournament_size = tournament_size
 
-        self.crossover_method = crossover_method  # metoda krzyżowania
-        self.crossover_prob = crossover_prob  # prawdopodobieństwo krzyżowania
+        self.crossover_method = crossover_method
+        self.crossover_prob = crossover_prob
 
-        self.mutation_method = mutation_method  # metoda mutacji
-        self.mutation_prob = mutation_prob  # prawdopodobieństwo mutacji
+        self.mutation_method = mutation_method
+        self.mutation_prob = mutation_prob
 
-        self.inversion_prob = inversion_prob  # prawdopodobieństwo inwersji
-        self.elitism_count = max(1, int(elitism_rate * population_size / 100))  # liczba elitarnych osobników
+        self.inversion_prob = inversion_prob
+        self.elitism_count = max(1, int(elitism_rate * population_size / 100))
 
-        self.lower_bound = lower_bound  # dolna granica zmiennych
-        self.upper_bound = upper_bound  # górna granica zmiennych
+        self.lower_bound = lower_bound
+        self.upper_bound = upper_bound
 
-        self.num_variables = None  # liczba zmiennych (ustawiana później)
-        self.chromosome_length = None  # długość całkowita chromosomu
+        self.num_variables = None
+        self.chromosome_length = None
 
     def fitness(self, chromosome):
         # Obliczenie wartości funkcji celu na podstawie zakodowanego chromosomu

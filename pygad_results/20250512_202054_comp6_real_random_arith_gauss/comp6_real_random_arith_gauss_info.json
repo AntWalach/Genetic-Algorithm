@@ -1,0 +1,16 @@
+{
+  "label": "comp6_real_random_arith_gauss",
+  "gene_type": "float",
+  "num_genes": 10,
+  "init_range": [
+    -5.12,
+    5.12
+  ],
+  "selection": "random",
+  "crossover": "arithmetic_crossover",
+  "mutation": "mutation_gauss",
+  "runs": 5,
+  "best_result": 3178.2175775962587,
+  "mean_result": 3083.3958908675822,
+  "std_deviation": 49.8974672599363
+}

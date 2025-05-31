@@ -7,7 +7,6 @@ import algorithm.fitness_wrappers as fit
 import os
 from datetime import datetime
 
-
 EXPERIMENTS = [
     # Reprezentacja binarna – Hypersphere
     # ("hyper_bin_tourn_1pt_swap", fit.fitness_hypersphere_bin, int, 200, 0, 2,
@@ -18,7 +17,7 @@ EXPERIMENTS = [
     #  "tournament", two_point_crossover, mutation_swap),
     # ("hyper_bin_tourn_2pt_bitflip", fit.fitness_hypersphere_bin, int, 200, 0, 2,
     #  "tournament", two_point_crossover, mutation_bitflip),
-    #
+
     # ("hyper_bin_rws_1pt_swap", fit.fitness_hypersphere_bin, int, 200, 0, 2,
     #  "rws", one_point_crossover, mutation_swap),
     # ("hyper_bin_rws_1pt_bitflip", fit.fitness_hypersphere_bin, int, 200, 0, 2,
@@ -27,7 +26,7 @@ EXPERIMENTS = [
     #  "rws", two_point_crossover, mutation_swap),
     # ("hyper_bin_rws_2pt_bitflip", fit.fitness_hypersphere_bin, int, 200, 0, 2,
     #  "rws", two_point_crossover, mutation_bitflip),
-    #
+
     # ("hyper_bin_best_1pt_swap", fit.fitness_hypersphere_bin, int, 200, 0, 2,
     #  "sss", one_point_crossover, mutation_swap),
     # ("hyper_bin_best_1pt_bitflip", fit.fitness_hypersphere_bin, int, 200, 0, 2,
@@ -38,38 +37,48 @@ EXPERIMENTS = [
     #  "sss", two_point_crossover, mutation_bitflip),
 
     # Reprezentacja rzeczywista – Hypersphere
-    ("hyper_real_tourn_arith_gauss", fit.fitness_hypersphere_real, float, 10,
-     -5.12, 5.12, "tournament", arithmetic_crossover, mutation_gauss),
-    ("hyper_real_tourn_arith_uniform", fit.fitness_hypersphere_real, float, 10,
-     -5.12, 5.12, "tournament", arithmetic_crossover, mutation_uniform),
-    ("hyper_real_tourn_blend_gauss", fit.fitness_hypersphere_real, float, 10,
-     -5.12, 5.12, "tournament", blend_crossover, mutation_gauss),
-    ("hyper_real_tourn_blend_uniform", fit.fitness_hypersphere_real, float, 10,
-     -5.12, 5.12, "tournament", blend_crossover, mutation_uniform),
+    # ("hyper_real_tourn_arith_gauss", fit.fitness_hypersphere_real, float, 10,
+    #  -5.12, 5.12, "tournament", arithmetic_crossover, mutation_gauss),
+    # ("hyper_real_tourn_arith_uniform", fit.fitness_hypersphere_real, float, 10,
+    #  -5.12, 5.12, "tournament", arithmetic_crossover, mutation_uniform),
+    # ("hyper_real_tourn_blend_gauss", fit.fitness_hypersphere_real, float, 10,
+    #  -5.12, 5.12, "tournament", blend_crossover, mutation_gauss),
+    # ("hyper_real_tourn_blend_uniform", fit.fitness_hypersphere_real, float, 10,
+    #  -5.12, 5.12, "tournament", blend_crossover, mutation_uniform),
 
-    # ("hyper_real_rws_arith_gauss", fit.fitness_hypersphere_real, float, 10,
-    #  -5.12, 5.12, "rws", arithmetic_crossover, mutation_gauss),
-    # ("hyper_real_rws_arith_uniform", fit.fitness_hypersphere_real, float, 10,
-    #  -5.12, 5.12, "rws", arithmetic_crossover, mutation_uniform),
-    # ("hyper_real_rws_blend_gauss", fit.fitness_hypersphere_real, float, 10,
-    #  -5.12, 5.12, "rws", blend_crossover, mutation_gauss),
-    # ("hyper_real_rws_blend_uniform", fit.fitness_hypersphere_real, float, 10,
-    #  -5.12, 5.12, "rws", blend_crossover, mutation_uniform),
+    # ("hyper_real_best_arith_gauss", fit.fitness_hypersphere_real, float, 10,
+    #  -5.12, 5.12, "sss", arithmetic_crossover, mutation_gauss),
+    # ("hyper_real_best_arith_uniform", fit.fitness_hypersphere_real, float, 10,
+    #  -5.12, 5.12, "sss", arithmetic_crossover, mutation_uniform),
+    # ("hyper_real_best_blend_gauss", fit.fitness_hypersphere_real, float, 10,
+    #  -5.12, 5.12, "sss", blend_crossover, mutation_gauss),
 
-    ("hyper_real_best_arith_gauss", fit.fitness_hypersphere_real, float, 10,
-     -5.12, 5.12, "sss", arithmetic_crossover, mutation_gauss),
-    ("hyper_real_best_arith_uniform", fit.fitness_hypersphere_real, float, 10,
-     -5.12, 5.12, "sss", arithmetic_crossover, mutation_uniform),
-    ("hyper_real_best_blend_gauss", fit.fitness_hypersphere_real, float, 10,
-     -5.12, 5.12, "sss", blend_crossover, mutation_gauss),
-    ("hyper_real_best_blend_uniform", fit.fitness_hypersphere_real, float, 10,
-     -5.12, 5.12, "sss", blend_crossover, mutation_uniform),
+
+    # ("hyper_real_random_blend_uniform", fit.fitness_hypersphere_real, float, 10,
+    #  -5.12, 5.12, "random", blend_crossover, mutation_uniform),
+    # ("hyper_real_random_arith_gauss", fit.fitness_hypersphere_real, float, 10,
+    #  -5.12, 5.12, "random", arithmetic_crossover, mutation_gauss),
+    # ("hyper_real_random_arith_uniform", fit.fitness_hypersphere_real, float, 10,
+    #  -5.12, 5.12, "random", arithmetic_crossover, mutation_uniform),
+    # ("hyper_real_random_blend_gauss", fit.fitness_hypersphere_real, float, 10,
+    #  -5.12, 5.12, "random", blend_crossover, mutation_gauss),
+    # ("hyper_real_random_blend_uniform", fit.fitness_hypersphere_real, float, 10,
+    #  -5.12, 5.12, "random", blend_crossover, mutation_uniform),
+
+    ("comp6_real_random_arith_gauss", fit.fitness_composition6_real, float, 10,
+     -5.12, 5.12, "random", arithmetic_crossover, mutation_gauss),
+    # ("comp6_real_random_arith_uniform", fit.fitness_composition6_real, float, 10,
+    #  -5.12, 5.12, "random", arithmetic_crossover, mutation_uniform),
+    # ("comp6_real_random_blend_gauss", fit.fitness_composition6_real, float, 10,
+    #  -5.12, 5.12, "random", blend_crossover, mutation_gauss),
+    # ("comp6_real_random_blend_uniform", fit.fitness_composition6_real, float, 10,
+    #  -5.12, 5.12, "random", blend_crossover, mutation_uniform),
+
 ]
 
 
-
 def run_once(label, fitness_func, gene_type, n_genes, low, high,
-             sel, xover, mut, runs=20):
+             sel, xover, mut, runs=5):
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     folder_name = f"{timestamp}_{label}"
@@ -95,9 +104,9 @@ def run_once(label, fitness_func, gene_type, n_genes, low, high,
             gene_space = [{"low": low, "high": high}] * n_genes
 
         ga = pygad.GA(
-            num_generations=100,
-            sol_per_pop=50,
-            num_parents_mating=20,
+            num_generations=200,
+            sol_per_pop=100,
+            num_parents_mating=50,
             num_genes=n_genes,
             fitness_func=fitness_func,
             gene_type=gene_type,

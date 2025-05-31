@@ -1,0 +1,16 @@
+{
+  "label": "hyper_real_random_arith_uniform",
+  "gene_type": "float",
+  "num_genes": 10,
+  "init_range": [
+    -5.12,
+    5.12
+  ],
+  "selection": "random",
+  "crossover": "arithmetic_crossover",
+  "mutation": "mutation_uniform",
+  "runs": 5,
+  "best_result": 1.634410492072115,
+  "mean_result": 1.1679766729732084,
+  "std_deviation": 0.274628708612183
+}

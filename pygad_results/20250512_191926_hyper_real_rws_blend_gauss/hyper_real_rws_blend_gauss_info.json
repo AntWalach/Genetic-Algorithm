@@ -1,0 +1,16 @@
+{
+  "label": "hyper_real_rws_blend_gauss",
+  "gene_type": "float",
+  "num_genes": 10,
+  "init_range": [
+    -5.12,
+    5.12
+  ],
+  "selection": "rws",
+  "crossover": "blend_crossover",
+  "mutation": "mutation_gauss",
+  "runs": 5,
+  "best_result": -0.08282902229047469,
+  "mean_result": -0.26808944899844633,
+  "std_deviation": 0.14397914239595275
+}

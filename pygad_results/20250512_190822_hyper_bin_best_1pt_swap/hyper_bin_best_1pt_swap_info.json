@@ -1,0 +1,16 @@
+{
+  "label": "hyper_bin_best_1pt_swap",
+  "gene_type": "int",
+  "num_genes": 200,
+  "init_range": [
+    0,
+    2
+  ],
+  "selection": "sss",
+  "crossover": "one_point_crossover",
+  "mutation": "mutation_swap",
+  "runs": 5,
+  "best_result": 0.0002002741342049622,
+  "mean_result": 0.00010204484375914876,
+  "std_deviation": 7.838566958361509e-05
+}

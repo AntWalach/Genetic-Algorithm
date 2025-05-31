@@ -1,0 +1,16 @@
+{
+  "label": "hyper_real_tourn_blend_uniform",
+  "gene_type": "float",
+  "num_genes": 10,
+  "init_range": [
+    -5.12,
+    5.12
+  ],
+  "selection": "tournament",
+  "crossover": "blend_crossover",
+  "mutation": "mutation_uniform",
+  "runs": 5,
+  "best_result": -0.5989912627538835,
+  "mean_result": -0.6913716219358662,
+  "std_deviation": 0.06973450729135071
+}

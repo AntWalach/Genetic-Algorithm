@@ -1,0 +1,16 @@
+{
+  "label": "comp6_real_best_blend_gauss",
+  "gene_type": "float",
+  "num_genes": 10,
+  "init_range": [
+    -5.12,
+    5.12
+  ],
+  "selection": "sss",
+  "crossover": "blend_crossover",
+  "mutation": "mutation_gauss",
+  "runs": 5,
+  "best_result": 3000.415582990754,
+  "mean_result": 3000.3234254565095,
+  "std_deviation": 0.07089631940080987
+}

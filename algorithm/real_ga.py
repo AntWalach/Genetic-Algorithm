@@ -10,10 +10,11 @@ class RealGeneticAlgorithm:
                  selection_method="best", tournament_size=3,
                  crossover_method="arithmetic", crossover_prob=0.8,
                  mutation_method="gaussian", mutation_prob=0.05,
-                 sigma=0.1,  # std dev. Gaussa
+                 sigma=0.1,
                  elitism_rate=0.1,
                  lower_bound=-5, upper_bound=5,
                  num_variables=10):
+
         self.func = func
         self.minimize = minimize
         self.population_size = population_size
@@ -29,7 +30,6 @@ class RealGeneticAlgorithm:
         self.low, self.high = lower_bound, upper_bound
         self.num_variables = num_variables
 
-    # ------------------------------------------------------------------ helpers
     def _fitness(self, individual):
         return self.func(individual)
 
@@ -39,19 +39,24 @@ class RealGeneticAlgorithm:
 
         if self.crossover_method == "arithmetic":
             return arithmetic_crossover(p1, p2)
+
         if self.crossover_method == "linear":
+
             kids = linear_crossover(p1, p2)
-            # zwracamy 2 najkorzystniejsze wg celu
             fit = [self._fitness(k) for k in kids]
             idx = np.argsort(fit) if self.minimize else np.argsort(fit)[::-1]
             return kids[idx[0]], kids[idx[1]]
+
         if self.crossover_method == "blx_alpha":
             return blx_alpha(p1, p2), blx_alpha(p2, p1)
+
         if self.crossover_method == "blx_alpha_beta":
             return blx_alpha_beta(p1, p2), blx_alpha_beta(p2, p1)
+
         if self.crossover_method == "averaging":
             child = averaging_crossover(p1, p2)
-            return child, child.copy()      # para identycznych
+            return child, child.copy()
+
         raise ValueError("Unknown crossover method")
 
     def _do_mutation(self, child):
@@ -63,7 +68,7 @@ class RealGeneticAlgorithm:
                                       self.sigma, self.low, self.high)
         return child
 
-    # ------------------------------------------------------------------ main loop
+
     def run(self, return_statistics=False):
         pop = initialize_real_population(self.population_size,
                                          self.num_variables,
@@ -74,7 +79,6 @@ class RealGeneticAlgorithm:
         for _ in range(self.num_epochs):
             fitnesses = [self._fitness(ind) for ind in pop]
 
-            # zapis statystyk
             current_best_idx = int(np.argmin(fitnesses) if self.minimize else np.argmax(fitnesses))
             if self.minimize and fitnesses[current_best_idx] < best_fit or \
                not self.minimize and fitnesses[current_best_idx] > best_fit:
