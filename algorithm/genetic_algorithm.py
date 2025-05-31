@@ -5,6 +5,7 @@ from algorithm.mutation import mutate
 from algorithm.inversion import apply_inversion
 from algorithm.utils import calculate_chromosome_length, decode, generate_chromosome, initialize_population
 
+
 class GeneticAlgorithm:
     def __init__(self, func, minimize=True, precision=0.01,
                  population_size=50, num_epochs=100,
@@ -15,6 +16,7 @@ class GeneticAlgorithm:
                  elitism_rate=0.1,
                  lower_bound=-5,
                  upper_bound=5):
+        
         # Inicjalizacja parametrów algorytmu genetycznego
         self.func = func
         self.minimize = minimize

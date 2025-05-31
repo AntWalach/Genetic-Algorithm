@@ -11,6 +11,7 @@ from algorithm.real_ga import RealGeneticAlgorithm
 from gui.charts import draw_charts
 from gui.storage import save_results_csv, save_results_db
 from tools.batch_runner import run_multiple_times
+from algorithm.mealpy_runner import MealpyRunner
 
 class GeneticApp:
     def __init__(self, root):
@@ -61,6 +62,10 @@ class GeneticApp:
         self._add_combobox(main_frame, "Typ krzyżowania:", row, 'crossover_method', ["one_point", "two_point", "uniform", "granular"], label_style); row += 1
         self._add_combobox(main_frame, "Typ mutacji:", row, 'mutation_method', ["one_point", "two_point", "boundary"], label_style); row += 1
         self._add_combobox(main_frame, "Typ optymalizacji:", row, 'optimize_type', ["minimize", "maximize"], label_style); row += 1
+        self.use_mealpy = tk.BooleanVar(value=False)
+        ttk.Checkbutton(main_frame, text="Użyj MEALPY OriginalAO", variable=self.use_mealpy).grid(
+            row=row, column=0, columnspan=2, pady=(5, 10))
+        row += 1
 
         ttk.Separator(main_frame, orient="horizontal").grid(row=row, column=0, columnspan=2, sticky="ew", pady=5); row += 1
 
@@ -79,14 +84,7 @@ class GeneticApp:
         setattr(self, var_name, var)
         ttk.Entry(parent, textvariable=var).grid(row=row, column=1, **entry_style)
 
-    # def _add_combobox(self, parent, label, row, var_name, values, label_style, callback=None):
-    #     ttk.Label(parent, text=label).grid(row=row, column=0, **label_style)
-    #     var = tk.StringVar(value=values[0])
-    #     setattr(self, var_name, var)
-    #     combobox = ttk.Combobox(parent, textvariable=var, values=values, state="readonly")
-    #     combobox.grid(row=row, column=1, padx=5, pady=3)
-    #     if callback:
-    #         combobox.bind("<<ComboboxSelected>>", lambda e: callback())
+
     def _add_combobox(self, parent, label, row, var_name, values,
                       label_style, callback=None):
         ttk.Label(parent, text=label).grid(row=row, column=0, **label_style)
@@ -167,46 +165,62 @@ class GeneticApp:
             "num_variables": self.num_variables.get(),
             "function": selected
         }
-        if self.chromosome_type.get() == "real":
-            ga = RealGeneticAlgorithm(
+
+        if self.use_mealpy.get():
+            from algorithm.mealpy_runner import MealpyRunner
+
+            runner = MealpyRunner(
                 func=fitness_fn,
                 minimize=minimize,
-                population_size=config["population_size"],
-                num_epochs=config["num_epochs"],
-                selection_method=config["selection_method"],
-                crossover_method=config["crossover_method"],
-                crossover_prob=config["crossover_prob"],
-                mutation_method=config["mutation_method"],
-                mutation_prob=config["mutation_prob"],
-                sigma=0.1,
-                elitism_rate=config["elitism_rate"],
                 lower_bound=config["lower_bound"],
                 upper_bound=config["upper_bound"],
-                num_variables=config["num_variables"]
+                num_variables=config["num_variables"],
+                pop_size=config["population_size"],
+                epochs=config["num_epochs"]
             )
+            start_time = time.time()
+            solution, fitness, history, avg_history, std_history = runner.run()
+            end_time = time.time()
         else:
-            ga = GeneticAlgorithm(
-                func=fitness_fn,
-                minimize=minimize,
-                precision=config["precision"],
-                population_size=config["population_size"],
-                num_epochs=config["num_epochs"],
-                selection_method=config["selection_method"],
-                crossover_method=config["crossover_method"],
-                crossover_prob=config["crossover_prob"],
-                mutation_method=config["mutation_method"],
-                mutation_prob=config["mutation_prob"],
-                inversion_prob=config["inversion_prob"],
-                elitism_rate=config["elitism_rate"],
-                lower_bound=config["lower_bound"],
-                upper_bound=config["upper_bound"]
-            )
+            if self.chromosome_type.get() == "real":
+                ga = RealGeneticAlgorithm(
+                    func=fitness_fn,
+                    minimize=minimize,
+                    population_size=config["population_size"],
+                    num_epochs=config["num_epochs"],
+                    selection_method=config["selection_method"],
+                    crossover_method=config["crossover_method"],
+                    crossover_prob=config["crossover_prob"],
+                    mutation_method=config["mutation_method"],
+                    mutation_prob=config["mutation_prob"],
+                    sigma=0.1,
+                    elitism_rate=config["elitism_rate"],
+                    lower_bound=config["lower_bound"],
+                    upper_bound=config["upper_bound"],
+                    num_variables=config["num_variables"]
+                )
+            else:  # genetic_binary
+                ga = GeneticAlgorithm(
+                    func=fitness_fn,
+                    minimize=minimize,
+                    precision=config["precision"],
+                    population_size=config["population_size"],
+                    num_epochs=config["num_epochs"],
+                    selection_method=config["selection_method"],
+                    crossover_method=config["crossover_method"],
+                    crossover_prob=config["crossover_prob"],
+                    mutation_method=config["mutation_method"],
+                    mutation_prob=config["mutation_prob"],
+                    inversion_prob=config["inversion_prob"],
+                    elitism_rate=config["elitism_rate"],
+                    lower_bound=config["lower_bound"],
+                    upper_bound=config["upper_bound"]
+                )
+            ga.num_variables = config["num_variables"]
+            start_time = time.time()
+            solution, fitness, history, avg_history, std_history = ga.run(return_statistics=True)
+            end_time = time.time()
 
-        ga.num_variables = config["num_variables"]
-
-        start_time = time.time()
-        solution, fitness, history, avg_history, std_history = ga.run(return_statistics=True)
-        end_time = time.time()
         duration = end_time - start_time
         self.time_label.config(text=f"Czas wykonywania: {duration:.2f} s")
 
@@ -269,6 +283,7 @@ class GeneticApp:
         runs = self.batch_runs.get()
         #output_path = run_multiple_times(GeneticAlgorithm, config, fitness_fn, selected, num_runs=runs)
         GA_CLASS = RealGeneticAlgorithm if self.chromosome_type.get() == "real" else GeneticAlgorithm
+
         output_path = run_multiple_times(GA_CLASS, config, fitness_fn, selected, num_runs=runs)
         messagebox.showinfo("Gotowe", f"Zakończono {runs} uruchomień.\nWyniki zapisane w folderze:\n{output_path}")
 
