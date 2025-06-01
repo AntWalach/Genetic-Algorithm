@@ -49,12 +49,141 @@ def save_summary_table(latest_folder, result_data):
     os.makedirs(summary_dir, exist_ok=True)
     summary_path = os.path.join(summary_dir, "tabelka_podsumowujaca.csv")
     df.to_csv(summary_path, index=False, encoding="utf-8-sig")
-
+#
+# def run_multiple_times(ga_class, config, fitness_fn, test_function_name, num_runs=10):
+#     # Ustal reprezentację na potrzeby nazwy folderu i JSON-a
+#     representation = "real" if ga_class.__name__ == "RealGeneticAlgorithm" else "binary"
+#
+#     # Wygeneruj nazwę folderu
+#     output_dir = generate_run_folder_name(config, test_function_name, representation)
+#     os.makedirs(output_dir, exist_ok=True)
+#
+#     all_results = []
+#     best_fitness_overall = float("inf") if config["minimize"] else float("-inf")
+#     best_run_data = None
+#     best_run_index = -1
+#
+#     # Filtrowanie konfiguracji
+#     if representation == "real":
+#         allowed_keys = {
+#             "func", "minimize", "population_size", "num_epochs",
+#             "selection_method", "tournament_size",
+#             "crossover_method", "crossover_prob",
+#             "mutation_method", "mutation_prob",
+#             "sigma", "elitism_rate",
+#             "lower_bound", "upper_bound", "num_variables"
+#         }
+#     else:
+#         allowed_keys = {
+#             "func", "minimize", "precision", "population_size", "num_epochs",
+#             "selection_method", "tournament_size",
+#             "crossover_method", "crossover_prob",
+#             "mutation_method", "mutation_prob", "inversion_prob",
+#             "elitism_rate", "lower_bound", "upper_bound"
+#             # UWAGA: num_variables przypiszemy ręcznie niżej
+#         }
+#
+#     for run in range(num_runs):
+#         run_dir = os.path.join(output_dir, f"run_{run + 1:02d}")
+#         os.makedirs(run_dir, exist_ok=True)
+#
+#         # Przygotowanie konfiguracji
+#         ga_config = {k: v for k, v in config.items() if k in allowed_keys}
+#         ga_config["func"] = fitness_fn
+#
+#         ga = ga_class(**ga_config)
+#
+#         # num_variables przypisywane osobno dla każdej klasy
+#         ga.num_variables = config["num_variables"]
+#
+#         start = time.time()
+#         solution, fitness, history, avg_history, std_history = ga.run(return_statistics=True)
+#         end = time.time()
+#         duration = end - start
+#
+#         # Zapis CSV
+#         with open(os.path.join(run_dir, "history.csv"), "w", newline="", encoding="utf-8") as f:
+#             writer = csv.writer(f)
+#             writer.writerow(["Epoch", "Best", "Avg", "Std"])
+#             for epoch, (b, a, s) in enumerate(zip(history, avg_history, std_history)):
+#                 writer.writerow([epoch + 1, b, a, s])
+#
+#         # Wykres
+#         fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 6))
+#         ax1.plot(history)
+#         ax1.set_title("Najlepsza wartość w każdej epoce")
+#         ax1.set_xlabel("Epoka")
+#         ax1.set_ylabel("Fitness")
+#         ax2.plot(avg_history, label="Średnia")
+#         ax2.plot(std_history, label="Odchylenie std.")
+#         ax2.set_title("Statystyki populacji")
+#         ax2.set_xlabel("Epoka")
+#         ax2.set_ylabel("Wartość")
+#         ax2.legend()
+#         plt.tight_layout()
+#         plt.savefig(os.path.join(run_dir, "charts.png"))
+#         plt.close(fig)
+#
+#         all_results.append({
+#             "run": run + 1,
+#             "solution": solution.tolist() if isinstance(solution, np.ndarray) else solution,
+#             "fitness": float(fitness),
+#             "time": round(duration, 4)
+#         })
+#
+#         if (config["minimize"] and fitness < best_fitness_overall) or \
+#            (not config["minimize"] and fitness > best_fitness_overall):
+#             best_fitness_overall = fitness
+#             best_run_data = (history, avg_history, std_history)
+#             best_run_index = run + 1
+#
+#     # Podsumowanie CSV
+#     with open(os.path.join(output_dir, "summary.csv"), "w", newline="", encoding="utf-8") as f:
+#         writer = csv.writer(f)
+#         writer.writerow(["Run", "Fitness", "Time (s)", "Solution"])
+#         for r in all_results:
+#             writer.writerow([r["run"], r["fitness"], f"{r['time']:.4f}", r["solution"]])
+#
+#     # Statystyki globalne
+#     fitnesses = [r["fitness"] for r in all_results]
+#     best = min(fitnesses) if config["minimize"] else max(fitnesses)
+#     worst = max(fitnesses) if config["minimize"] else min(fitnesses)
+#     avg = float(np.mean(fitnesses))
+#
+#     with open(os.path.join(output_dir, "summary_stats.txt"), "w", encoding="utf-8") as f:
+#         f.write(f"Best fitness: {best}\n")
+#         f.write(f"Worst fitness: {worst}\n")
+#         f.write(f"Average fitness: {avg}\n")
+#         f.write(f"Best run: run_{best_run_index:02d}\n")
+#
+#     # Dane końcowe
+#     result_data = {
+#         "config": config,
+#         "test_function": test_function_name,
+#         "representation": representation,
+#         "num_runs": num_runs,
+#         "average_fitness": float(avg),
+#         "best_fitness": float(best),
+#         "worst_fitness": float(worst),
+#         "best_run": best_run_index,
+#         "results": all_results
+#     }
+#
+#     with open(os.path.join(output_dir, "result.json"), "w", encoding="utf-8") as jf:
+#         json.dump(result_data, jf, indent=2, ensure_ascii=False)
+#
+#     # Tabelka zbiorcza (do Excela itp.)
+#     save_summary_table(output_dir, result_data)
+#
+#     return output_dir
 def run_multiple_times(ga_class, config, fitness_fn, test_function_name, num_runs=10):
-    # Ustal reprezentację na potrzeby nazwy folderu i JSON-a
-    representation = "real" if ga_class.__name__ == "RealGeneticAlgorithm" else "binary"
+    representation = (
+        "mealpy"
+        if ga_class.__name__ == "MealpyRunner"
+        else "real" if ga_class.__name__ == "RealGeneticAlgorithm"
+        else "binary"
+    )
 
-    # Wygeneruj nazwę folderu
     output_dir = generate_run_folder_name(config, test_function_name, representation)
     os.makedirs(output_dir, exist_ok=True)
 
@@ -63,45 +192,57 @@ def run_multiple_times(ga_class, config, fitness_fn, test_function_name, num_run
     best_run_data = None
     best_run_index = -1
 
-    # Filtrowanie konfiguracji
-    if representation == "real":
-        allowed_keys = {
-            "func", "minimize", "population_size", "num_epochs",
-            "selection_method", "tournament_size",
-            "crossover_method", "crossover_prob",
-            "mutation_method", "mutation_prob",
-            "sigma", "elitism_rate",
-            "lower_bound", "upper_bound", "num_variables"
-        }
-    else:
-        allowed_keys = {
-            "func", "minimize", "precision", "population_size", "num_epochs",
-            "selection_method", "tournament_size",
-            "crossover_method", "crossover_prob",
-            "mutation_method", "mutation_prob", "inversion_prob",
-            "elitism_rate", "lower_bound", "upper_bound"
-            # UWAGA: num_variables przypiszemy ręcznie niżej
-        }
-
     for run in range(num_runs):
         run_dir = os.path.join(output_dir, f"run_{run + 1:02d}")
         os.makedirs(run_dir, exist_ok=True)
 
-        # Przygotowanie konfiguracji
-        ga_config = {k: v for k, v in config.items() if k in allowed_keys}
-        ga_config["func"] = fitness_fn
-
-        ga = ga_class(**ga_config)
-
-        # num_variables przypisywane osobno dla każdej klasy
-        ga.num_variables = config["num_variables"]
-
         start = time.time()
-        solution, fitness, history, avg_history, std_history = ga.run(return_statistics=True)
+
+        if ga_class.__name__ == "MealpyRunner":
+            ga = ga_class(
+                func=fitness_fn,
+                minimize=config["minimize"],
+                lower_bound=config["lower_bound"],
+                upper_bound=config["upper_bound"],
+                num_variables=config["num_variables"],
+                pop_size=config["population_size"],
+                epochs=config["num_epochs"]
+            )
+            solution, fitness, history, avg_history, std_history = ga.run()
+        else:
+            if ga_class.__name__ == "RealGeneticAlgorithm":
+                allowed_keys = {
+                    "func", "minimize", "population_size", "num_epochs",
+                    "selection_method", "tournament_size",
+                    "crossover_method", "crossover_prob",
+                    "mutation_method", "mutation_prob",
+                    "sigma", "elitism_rate",
+                    "lower_bound", "upper_bound", "num_variables"
+                }
+            elif ga_class.__name__ == "GeneticAlgorithm":  # binary
+                allowed_keys = {
+                    "func", "minimize", "precision", "population_size", "num_epochs",
+                    "selection_method", "tournament_size",
+                    "crossover_method", "crossover_prob",
+                    "mutation_method", "mutation_prob", "inversion_prob",
+                    "elitism_rate", "lower_bound", "upper_bound"
+                }
+            else:  # fallback (for safety, though Mealpy is handled separately above)
+                allowed_keys = set(config.keys())
+            ga_config = {k: v for k, v in config.items() if k in allowed_keys}
+            ga_config["func"] = fitness_fn
+
+            ga = ga_class(**ga_config)
+
+            # Tylko klasy RealGeneticAlgorithm i MealpyRunner potrzebują tego parametru jawnie
+            if hasattr(ga, "num_variables"):
+                ga.num_variables = config["num_variables"]
+            solution, fitness, history, avg_history, std_history = ga.run(return_statistics=True)
+
         end = time.time()
         duration = end - start
 
-        # Zapis CSV
+        # CSV
         with open(os.path.join(run_dir, "history.csv"), "w", newline="", encoding="utf-8") as f:
             writer = csv.writer(f)
             writer.writerow(["Epoch", "Best", "Avg", "Std"])
@@ -137,14 +278,13 @@ def run_multiple_times(ga_class, config, fitness_fn, test_function_name, num_run
             best_run_data = (history, avg_history, std_history)
             best_run_index = run + 1
 
-    # Podsumowanie CSV
+    # Zapis zbiorczy
     with open(os.path.join(output_dir, "summary.csv"), "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         writer.writerow(["Run", "Fitness", "Time (s)", "Solution"])
         for r in all_results:
             writer.writerow([r["run"], r["fitness"], f"{r['time']:.4f}", r["solution"]])
 
-    # Statystyki globalne
     fitnesses = [r["fitness"] for r in all_results]
     best = min(fitnesses) if config["minimize"] else max(fitnesses)
     worst = max(fitnesses) if config["minimize"] else min(fitnesses)
@@ -156,7 +296,6 @@ def run_multiple_times(ga_class, config, fitness_fn, test_function_name, num_run
         f.write(f"Average fitness: {avg}\n")
         f.write(f"Best run: run_{best_run_index:02d}\n")
 
-    # Dane końcowe
     result_data = {
         "config": config,
         "test_function": test_function_name,
@@ -172,7 +311,6 @@ def run_multiple_times(ga_class, config, fitness_fn, test_function_name, num_run
     with open(os.path.join(output_dir, "result.json"), "w", encoding="utf-8") as jf:
         json.dump(result_data, jf, indent=2, ensure_ascii=False)
 
-    # Tabelka zbiorcza (do Excela itp.)
     save_summary_table(output_dir, result_data)
 
     return output_dir
